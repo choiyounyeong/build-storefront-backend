@@ -1,4 +1,4 @@
-import { User, UserStore } from '../user';
+import { User, UserStore } from '../models/user';
 import express, { Router, Request, Response } from 'express';
 import dotent from 'dotenv';
 import jwt, { Secret } from 'jsonwebtoken';

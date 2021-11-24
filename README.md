@@ -1,23 +1,24 @@
 # Storefront Backend Project
 
-## Getting Started
+# Description
 
 This repo contains a basic Node and Express app to get you started in constructing an API. To get started, clone this repo and run `yarn` in your terminal at the project root.
 
-## Required Technologies
+# Steps to Completion
 
-Your application must make use of the following libraries:
+## 1. Install Dependencies
 
-- Postgres for the database
-- Node/Express for the application logic
-- dotenv from npm for managing environment variables
-- db-migrate from npm for migrations
-- jsonwebtoken from npm for working with JWTs
-- jasmine from npm for testing
+Let's start with installing all of the dependencies. Execute the following command from the root folder.
 
-## Steps to Completion
+```
+$ npm install
+```
 
-## Setup Database
+Please confirm typescript, pg, jsonwebtoken, express, dotenv, db-migrate, db-migrate-pg, body-parser, bcrypt, jasmine, jasmine-spec-reporter, jasmine-ts, ts-node, and tsc-watch are successfully installed.
+
+## 2. Setup Database
+
+We will use Postgres for the database.
 
 1. Create User
 
@@ -32,17 +33,14 @@ CREATE DATABASE storefront;
 CREATE DATABASE storefront_test;
 ```
 
-3. Connect to the Database
-
-```
-\c storefront;
-```
-
 3. Grant all privileges
 
 ```
 GRANT ALL PRIVILEGES ON DATABASE storefront TO storefront_user;
+GRANT ALL PRIVILEGES ON DATABASE storefront_test TO shopping_user;
 ```
+
+## 3. Migrate Database
 
 ### 1. Plan to Meet Requirements
 
@@ -50,11 +48,13 @@ In this repo there is a `REQUIREMENTS.md` document which outlines what this API 
 
 Your first task is to read the requirements and update the document with the following:
 
-- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.  
+- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.
   **Example**: A SHOW route: 'blogs/:id' [GET]
 
-- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.  
+- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.
+
   **Example**: You can format this however you like but these types of information should be provided
+
   Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
 
 **NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape.

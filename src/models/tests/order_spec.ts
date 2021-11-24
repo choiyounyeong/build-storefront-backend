@@ -7,25 +7,26 @@ describe('Order model', async () => {
     expect(order.index).toBeDefined();
   });
 
+  it('should have method addProduct', () => {
+    expect(order.addProduct).toBeDefined();
+  });
+
   it('should have method delete', () => {
     expect(order.delete).toBeDefined();
   });
 
-  it('create method should add a product', async () => {
-    const result = await order.index({
-      name: 'Montblanc Wallet',
-      price: 230,
-    });
+  it('addProduct method should add a product', async () => {
+    const result = await order.addProduct(1, 'firstorder', 'firstitem');
 
-    expect(result.id).toBeDefined();
-    expect(result.name).toEqual('Montblanc Wallet');
-    expect(result.price).toEqual('230');
+    expect(result.quantity).toEqual(1);
+    expect(result.order_id).toEqual('firstorder');
+    expect(result.product_id).toEqual('firstitem');
   });
 
   it('delete method should remove the book', async () => {
     order.delete('1');
-    const result = await product.index();
 
+    const result = await product.index();
     expect(result).toEqual([]);
   });
 });
