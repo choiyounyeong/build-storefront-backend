@@ -5,8 +5,8 @@ const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
 
 export type User = {
   id?: string | number;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   password: string | number;
 };
 
@@ -38,34 +38,19 @@ export class UserStore {
   async create(u: User): Promise<User> {
     try {
       const pepper: string = BCRYPT_PASSWORD as string;
-      const salt: string = SALT_ROUNDS as string;
+      const saltRounds: string = SALT_ROUNDS as string;
       const conn = await Client.connect();
       const sql =
-        'INSERT INTO users (firstName, lastName, password) VALUES ($1, $2, $3)';
+        'INSERT INTO users (firstName, lastName, password) VALUES ($1, $2, $3) RETURNING *';
 
-      const hash = bcrypt.hashSync(u.password + pepper, parseInt(salt));
-      const result = await conn.query(sql, [
-        u.firstName,
-        u.lastName,
-        u.password,
-        hash,
-      ]);
+      const hash = bcrypt.hashSync(u.password + pepper, parseInt(saltRounds));
+      const result = await conn.query(sql, [u.firstname, u.lastname, hash]);
       conn.release();
       return result.rows[0];
     } catch (err) {
-      throw new Error(`Failed to add new user. Error: ${err}`);
-    }
-  }
-
-  async delete(id: string | number): Promise<User> {
-    try {
-      const conn = await Client.connect();
-      const sql = 'DELETE FROM users WHERE id = ($1)';
-      const result = await conn.query(sql, [id]);
-      conn.release();
-      return result.rows[0];
-    } catch (err) {
-      throw new Error(`Failed to delete the user. Error: ${err}`);
+      throw new Error(
+        `Failed to add new user, ${u.lastname} ${u.firstname}. Error: ${err}`
+      );
     }
   }
 
@@ -76,7 +61,7 @@ export class UserStore {
     const conn = await Client.connect();
     const sql =
       'SELECT password FROM users WHERE first_name = ($1) AND last_name = ($2);';
-    const result = await conn.query(sql, [u.firstName, u.lastName]);
+    const result = await conn.query(sql, [u.firstname, u.lastname]);
     console.log(u.password + pepper);
     conn.release();
 
@@ -89,5 +74,17 @@ export class UserStore {
       }
     }
     return null;
+  }
+
+  async destroy(id: string | number): Promise<User> {
+    try {
+      const conn = await Client.connect();
+      const sql = 'DELETE FROM users WHERE id = ($1)';
+      const result = await conn.query(sql, [id]);
+      conn.release();
+      return result.rows[0];
+    } catch (err) {
+      throw new Error(`Failed to delete the user. Error: ${err}`);
+    }
   }
 }

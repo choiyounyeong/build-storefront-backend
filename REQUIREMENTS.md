@@ -8,19 +8,23 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Products
 
-- Index
-- Show
-- Create [token required]
+- Index: '/products' [GET]
+- Show: '/products/:id' [GET]
+- Create [token required]: '/products/:id/new' [POST]
+- Delete [token required]: '/products/:id' [DELETE]
 
 #### Users
 
-- Index [token required]
-- Show [token required]
-- Create N[token required]
+- Index [token required]: '/users' [GET]
+- Show [token required]: '/users/:id' [GET]
+- Create [token required]: '/users/:id/new' [POST]
 
 #### Orders
 
-- Current Order by user (args: user id)[token required]
+- Index [token required]: '/orders' [GET]
+- Show [token required]: '/orderss/:id' [GET]
+- Create [token required]: '/orders/:id/new' [POST]
+- Delete [token required]: '/orders/:id' [DELETE]
 
 ## Data Shapes
 
@@ -40,8 +44,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 #### orders
 
 - id SERIAL PRIMARY KEY
-- product_id bigint REFERENCES products(id)
-- quantity INTEGER
 - user_id bitint REFERENCES users(id)
 - status status (CREATE TYPE status AS ENUM ('active', 'complete');)
 
@@ -50,3 +52,4 @@ These are the notes from a meeting with the frontend developer that describe wha
 - id SERIAL PRIMARY KEY
 - order_id bigint REFERENCES orders(id)
 - product_id bigint REFERENCES products(id)
+- quantity INTEGER

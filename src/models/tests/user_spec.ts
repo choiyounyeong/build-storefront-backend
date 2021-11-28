@@ -1,15 +1,22 @@
-import Client from '../../database';
+import client from '../../database';
 import { UserStore } from '../user';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 
 dotenv.config();
 
-const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
+const { BCRYPT_PASSWORD } = process.env;
 
 const user = new UserStore();
 
 describe('User model', () => {
+  let creadedUserId: number;
+  afterAll(async () => {
+    const conn = await client.connect();
+    const sql = 'DELETE FROM users';
+    await conn.query(sql);
+  });
+
   it('should have index method', () => {
     expect(user.index).toBeDefined();
   });
@@ -23,49 +30,46 @@ describe('User model', () => {
   });
 
   it('should have delete method', () => {
-    expect(user.delete).toBeDefined();
+    expect(user.destroy).toBeDefined();
   });
 
-  it('create method should add a user', async () => {
+  it('create method should create a user and return hased password', async () => {
     const createdUser = await user.create({
-      firstName: 'Bella',
-      lastName: 'Choi',
+      firstname: 'Bella',
+      lastname: 'Choi',
       password: 'password0000',
     });
-
+    creadedUserId = Number(createdUser.id);
     expect(createdUser.id).toBeDefined();
-    expect(createdUser.firstName).toEqual('Bella');
-    expect(createdUser.lastName).toEqual('Choi');
-    expect(createdUser.password).toEqual('password0000');
-  });
-  //   afterAll(async () => {
-  //     try {
-  //       const conn = await Client.connect();
-  //       const sql = 'DELETE FROM users';
-  //       await conn.query(sql);
-  //     } catch (err) {
-  //       throw new Error(`Could not remove users. Error ${err}`);
-  //     }
-  //   });
-
-  it('create method should add a user and return hashed password', async () => {
-    const result = await store.create({
-      first_name: 'Jane',
-      last_name: 'Doe',
-      password: 'Password123!',
-    });
+    expect(createdUser.firstname).toEqual('Bella');
+    expect(createdUser.lastname).toEqual('Choi');
     expect(
-      bcrypt.compareSync('Password123!' + BCRYPT_PASSWORD, result.password)
+      bcrypt.compareSync(
+        'password0000' + BCRYPT_PASSWORD,
+        createdUser.password as string
+      )
     ).toBeTrue();
   });
 
-  it('index method should return a list of users', async () => {
-    const result = await store.index();
-    expect(result.length).toEqual(2);
+  it('index method should return a list of user', async () => {
+    const result = await user.index();
+    expect(result.length).toBe(1);
+    expect(result[0].firstname).toEqual('Bella');
   });
 
   it('show method should return the correct user', async () => {
-    const result = await store.show(2);
-    expect(result.first_name).toEqual('Jane');
+    const result = await user.show(creadedUserId);
+    expect(result.firstname).toEqual('Bella');
+  });
+
+  it('destroy method should remove the user', async () => {
+    const deleteUser = await user.destroy(creadedUserId);
+
+    const conn = await client.connect();
+    const sql = `SELECT * FROM users WHERE id = ${creadedUserId};`;
+    const result = await conn.query(sql);
+    conn.release();
+
+    expect(result).toBeTruthy();
   });
 });
