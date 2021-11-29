@@ -1,25 +1,25 @@
-import { ProductStore } from '../models/product';
-import express, { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { json } from 'body-parser';
+import { ProductStore } from "../models/product";
+import express, { Request, Response } from "express";
+import jwt, { Secret } from "jsonwebtoken";
+import { json } from "body-parser";
 
 const productRoutes = (app: express.Application) => {
-  app.get('/products', index);
-  app.get('/products/:id', show);
-  app.post('/products/:id/new', verifyAuthToken, create);
-  app.delete('/products/:id', verifyAuthToken, destroy);
+  app.get("/products", index);
+  app.get("/products/:id", show);
+  app.post("/products/:id/new", verifyAuthToken, create);
+  app.delete("/products/:id", verifyAuthToken, destroy);
 };
 
 const product = new ProductStore();
 
-const verifyAuthToken = (req: Request, res: Response, next: NextFunction) => {
+const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
   try {
     const authorizationHeader = req.headers.authorization as string;
-    const token = authorizationHeader.split(' ')[1];
-    jwt.verify(token, process.env.TOKEN_SECRET as string);
+    const token = authorizationHeader.split(" ")[1];
+    jwt.verify(token, process.env.TOKEN_SECRET as Secret);
     next();
   } catch (error) {
-    res.status(401).json('Access denied, invalid token');
+    res.status(401).json("Access denied, invalid token");
   }
 };
 

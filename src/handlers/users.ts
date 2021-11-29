@@ -1,27 +1,27 @@
-import { User, UserStore } from '../models/user';
-import express, { Request, Response, NextFunction } from 'express';
-import dotent from 'dotenv';
-import jwt from 'jsonwebtoken';
+import { User, UserStore } from "../models/user";
+import express, { Request, Response } from "express";
+import dotent from "dotenv";
+import jwt, { Secret } from "jsonwebtoken";
 
 dotent.config();
 
 const userRoutes = (app: express.Application) => {
-  app.get('/users', verifyAuthToken, index);
-  app.get('/users/:id', verifyAuthToken, show);
-  app.post('/users/:id/new', verifyAuthToken, create);
-  app.delete('/users/:id', verifyAuthToken, destroy);
+  app.get("/users", verifyAuthToken, index);
+  app.get("/users/:id", verifyAuthToken, show);
+  app.post("/users/:id/new", verifyAuthToken, create);
+  app.delete("/users/:id", verifyAuthToken, destroy);
 };
 
 const store = new UserStore();
 
-const verifyAuthToken = (req: Request, res: Response, next: NextFunction) => {
+const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
   try {
     const authorizationHeader = req.headers.authorization as string;
-    const token = authorizationHeader.split(' ')[1];
-    jwt.verify(token, process.env.TOKEN_SECRET as string);
+    const token = authorizationHeader.split(" ")[1];
+    jwt.verify(token, process.env.TOKEN_SECRET as Secret);
     next();
   } catch (error) {
-    res.status(401).json('Access denied, invalid token');
+    res.status(401).json("Access denied, invalid token");
   }
 };
 
