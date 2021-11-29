@@ -1,13 +1,13 @@
-import { ProductStore } from "../models/product";
-import express, { Request, Response } from "express";
-import jwt, { Secret } from "jsonwebtoken";
-import { json } from "body-parser";
+import { ProductStore } from '../models/product';
+import express, { Request, Response } from 'express';
+import jwt, { Secret } from 'jsonwebtoken';
+import { json } from 'body-parser';
 
 const productRoutes = (app: express.Application) => {
-  app.get("/products", index);
-  app.get("/products/:id", show);
-  app.post("/products/:id/new", verifyAuthToken, create);
-  app.delete("/products/:id", verifyAuthToken, destroy);
+  app.get('/products', index);
+  app.get('/products/:id', show);
+  app.post('/products/new', verifyAuthToken, create);
+  app.delete('/products/:id', verifyAuthToken, destroy);
 };
 
 const product = new ProductStore();
@@ -15,11 +15,11 @@ const product = new ProductStore();
 const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
   try {
     const authorizationHeader = req.headers.authorization as string;
-    const token = authorizationHeader.split(" ")[1];
+    const token = authorizationHeader;
     jwt.verify(token, process.env.TOKEN_SECRET as Secret);
     next();
   } catch (error) {
-    res.status(401).json("Access denied, invalid token");
+    res.status(401).json('Access denied, invalid token');
   }
 };
 
@@ -36,8 +36,8 @@ const show = async (_req: Request, res: Response) => {
 const create = async (_req: Request, res: Response) => {
   try {
     const newProduct = await product.create({
-      name: _req.params.name,
-      price: _req.params.price,
+      name: _req.body.name,
+      price: _req.body.price,
     });
     res.json(newProduct);
   } catch (err) {

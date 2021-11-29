@@ -41,11 +41,11 @@ export class OrderStore {
     }
   }
 
-  async show(user_id: string | number): Promise<Order> {
+  async show(id: string | number): Promise<Order> {
     try {
       const conn = await client.connect();
-      const sql = 'SELECT * FROM orders WHERE user_id = ($1)';
-      const result = await conn.query(sql, [user_id]);
+      const sql = 'SELECT * FROM orders WHERE id = ($1)';
+      const result = await conn.query(sql, [id]);
       conn.release();
       return result.rows[0];
     } catch (err) {

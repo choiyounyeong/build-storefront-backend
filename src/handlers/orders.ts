@@ -1,12 +1,12 @@
-import { OrderStore, OrderProductStore } from "../models/order";
-import express, { Request, Response } from "express";
-import jwt, { Secret } from "jsonwebtoken";
+import { OrderStore, OrderProductStore } from '../models/order';
+import express, { Request, Response } from 'express';
+import jwt, { Secret } from 'jsonwebtoken';
 
 const orderRoutes = (app: express.Application) => {
-  app.get("/orders", verifyAuthToken, index);
-  app.get("/orders/:id", verifyAuthToken, show);
-  app.post("/orders/:id/new", verifyAuthToken, create);
-  app.delete("/orders/:id", verifyAuthToken, destroy);
+  app.get('/orders', verifyAuthToken, index);
+  app.get('/orders/:id', verifyAuthToken, show);
+  app.post('/orders/new', verifyAuthToken, create);
+  app.delete('/orders/:id', verifyAuthToken, destroy);
 };
 
 const orderStore = new OrderStore();
@@ -15,11 +15,11 @@ const orderProductStore = new OrderProductStore();
 const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
   try {
     const authorizationHeader = req.headers.authorization as string;
-    const token = authorizationHeader.split(" ")[1];
+    const token = authorizationHeader;
     jwt.verify(token, process.env.TOKEN_SECRET as Secret);
     next();
   } catch (error) {
-    res.status(401).json("Access denied, invalid token");
+    res.status(401).json('Access denied, invalid token');
   }
 };
 
@@ -35,7 +35,8 @@ const show = async (_req: Request, res: Response) => {
 
 const create = async (_req: Request, res: Response) => {
   const userId = _req.body.userId;
-  const createdOrder = await orderStore.create(userId, "active");
+  const createdOrder = await orderStore.create(userId, 'active');
+  console.log(createdOrder);
 
   if (createdOrder.id) {
     const items = _req.body.items;
@@ -47,7 +48,7 @@ const create = async (_req: Request, res: Response) => {
       );
     }
   } else {
-    throw Error("Order cannot be created.");
+    throw Error('Order cannot be created.');
   }
 
   res.json(createdOrder);
