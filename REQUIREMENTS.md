@@ -28,26 +28,42 @@
 
 #### products
 
-- id SERIAL PRIMARY KEY
-- name VARCHAR(50)
-- price DECIMAL(10,2)
+- id
+- name of product
+- price
+
+```
+Table: products (id: SERIAL PRIMARY KEY, name: VARCHAR(50), price: DECIMAL(10,2))
+```
 
 #### users
 
-- id SERIAL PRIMARY KEY
-- firstName VARCHAR(50)
-- lastName VARCHAR(50)
-- password VARCHAR(255)
+- id
+- firstname
+- lastname
+- password
+
+```
+Table: users (id: SERIAL PRIMARY KEY, firstname: VARCHAR(50), lastname: VARCHAR(50), password: VARCHAR(255))
+```
 
 #### orders
 
-- id SERIAL PRIMARY KEY
-- user_id bitint REFERENCES users(id)
-- status status (CREATE TYPE status AS ENUM ('active', 'complete');)
+- id
+- user_id
+- status of order(active or complete)
+
+```
+Table: orders (id: SERIAL PRIMARY KEY, user_id: bitint REFERENCES users(id), status: ENUM ('active', 'complete'))
+```
 
 #### order_products
 
-- id SERIAL PRIMARY KEY
-- order_id bigint REFERENCES orders(id)
-- product_id bigint REFERENCES products(id)
-- quantity INTEGER
+- id
+- order_id
+- product_id
+- quantity
+
+```
+Table: orders (id: SERIAL PRIMARY KEY, order_id: bigint REFERENCES orders(id), product_id: bigint REFERENCES products(id), quantity: INTEGER)
+```
