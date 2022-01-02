@@ -38,6 +38,8 @@ const create = async (_req: Request, res: Response) => {
     const newProduct = await product.create({
       name: _req.body.name,
       price: _req.body.price,
+      url: _req.body.url,
+      description: _req.body.description,
     });
     res.json(newProduct);
   } catch (err) {

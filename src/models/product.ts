@@ -4,6 +4,8 @@ export type Product = {
   id?: string | number;
   name: string | number;
   price: string | number;
+  url: string;
+  description: string;
 };
 
 export class ProductStore {

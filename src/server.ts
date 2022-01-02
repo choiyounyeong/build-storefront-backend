@@ -6,8 +6,10 @@ import userRoutes from './handlers/users';
 
 const app = express();
 const address: string = '0.0.0.0:3000';
+const cors = require('cors');
 
 app.use(bodyParser.json());
+app.use(cors());
 
 app.get('/', function (req: Request, res: Response) {
   res.send('Welcome to online store!');

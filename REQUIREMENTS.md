@@ -31,9 +31,11 @@
 - id
 - name of product
 - price
+- url
+- description
 
 ```
-Table: products (id: SERIAL PRIMARY KEY, name: VARCHAR(50), price: DECIMAL(10,2))
+Table: products (id: SERIAL PRIMARY KEY, name: VARCHAR(50), price: DECIMAL(10,2), url: VARCHAR(255), description: VARCHAR(255))
 ```
 
 #### users
@@ -65,5 +67,5 @@ Table: orders (id: SERIAL PRIMARY KEY, user_id: bitint REFERENCES users(id), sta
 - quantity
 
 ```
-Table: orders (id: SERIAL PRIMARY KEY, order_id: bigint REFERENCES orders(id), product_id: bigint REFERENCES products(id), quantity: INTEGER)
+Table: order_products (id: SERIAL PRIMARY KEY, order_id: bigint REFERENCES orders(id), product_id: bigint REFERENCES products(id), quantity: INTEGER)
 ```
