@@ -25,7 +25,7 @@ const verifyAuthToken = (req: Request, res: Response, next: () => void) => {
 
 const index = async (_req: Request, res: Response) => {
   const products = await product.index();
-  res.json(products);
+  res.json(products.sort((a, b) => Number(a.id) - Number(b.id)));
 };
 
 const show = async (_req: Request, res: Response) => {
